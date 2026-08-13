@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020712">
+
+<title>SANDRO GSM Tools 205 - Madagascar</title>
+
+<style>
+
+:root{
+    --bg:#020712;
+    --card:#071525;
+    --cyan:#00eaff;
+    --blue:#168cff;
+    --purple:#9b5cff;
+    --green:#00ff9d;
+    --red:#ff315c;
+    --white:#f8fbff;
+    --muted:#91a6bd;
+    --border:rgba(0,234,255,.25);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{ scroll-behavior:smooth; }
+
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+    font-family:'Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--white);
+    background:
+        radial-gradient(circle at 10% 10%, rgba(0,234,255,.13), transparent 28%),
+        radial-gradient(circle at 90% 30%, rgba(155,92,255,.14), transparent 30%),
+        linear-gradient(135deg, #020712, #061426 50%, #03050d);
+}
+
+.grid-bg{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background-image:
+        linear-gradient(rgba(0,234,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,234,255,.06) 1px, transparent 1px);
+    background-size:45px 45px;
+}
+
+.glow{
+    position:fixed;
+    width:280px;
+    height:280px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.15;
+    z-index:-1;
+}
+
+.glow-one{ background:var(--cyan); left:-150px; top:150px; }
+.glow-two{ background:var(--purple); right:-150px; top:600px; }
+
+/* HEADER */
+header{
+    text-align:center;
+    padding:45px 15px 42px;
+    background: linear-gradient(135deg, rgba(0,100,170,.95), rgba(2,15,31,.98) 55%, rgba(65,20,110,.95));
+    border-bottom:1px solid var(--cyan);
+    box-shadow: 0 15px 50px rgba(0,0,0,.5);
+}
+
+.madagascar-logo{
+    width:95px;
+    height:95px;
+    margin:auto;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    font-size:46px;
+    background: linear-gradient(90deg, #fff 0 34%, #e33 34% 67%, #07853f 67% 100%);
+    border:4px solid white;
+    box-shadow: 0 0 20px rgba(255,255,255,.5), 0 0 50px rgba(0,234,255,.5);
+}
+
+.edition{
+    display:inline-block;
+    padding:7px 14px;
+    border:1px solid rgba(0,234,255,.6);
+    border-radius:30px;
+    color:var(--cyan);
+    font-size:.68rem;
+    font-weight:bold;
+    letter-spacing:2px;
+    background:rgba(0,234,255,.06);
+}
+
+header h1{
+    margin-top:17px;
+    font-size: clamp(2.1rem,9vw,4.5rem);
+    line-height:1.05;
+    letter-spacing:3px;
+    font-style:italic;
+    background: linear-gradient(90deg, white, var(--cyan), white, var(--purple), white);
+    background-size:300%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:titleMove 5s linear infinite;
+}
+
+@keyframes titleMove{ to{ background-position:300%; } }
+
+header p{
+    max-width:700px;
+    margin:20px auto 0;
+    color:#d5e6f4;
+    font-size:.9rem;
+    line-height:1.8;
+}
+
+.status{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:22px;
+}
+
+.status span{
+    padding:7px 12px;
+    border:1px solid rgba(0,234,255,.25);
+    border-radius:30px;
+    color:var(--cyan);
+    font-size:.62rem;
+    font-weight:bold;
+    background:rgba(0,234,255,.05);
+}
+
+.online-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    margin-right:5px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 12px var(--green);
+}
+
+/* NAV */
+nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 5%;
+    background:rgba(2,8,17,.90);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(0,234,255,.18);
+}
+
+.nav-title{ color:var(--cyan); font-weight:900; letter-spacing:1px; font-size:.8rem; }
+.nav-links{ display:flex; gap:5px; }
+.nav-links a{
+    color:#c6d5e4;
+    text-decoration:none;
+    padding:7px 9px;
+    font-size:.65rem;
+    font-weight:bold;
+    border-radius:7px;
+}
+.nav-links a:hover{ color:var(--cyan); background:rgba(0,234,255,.08); }
+
+/* MAIN */
+main{
+    width:min(1100px,92%);
+    margin:auto;
+    padding:35px 0 70px;
+}
+
+/* STATS */
+.stats{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:12px;
+    margin-bottom:30px;
+}
+
+.stat{
+    padding:20px 10px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background: rgba(5,18,32,.75);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.stat strong{
+    display:block;
+    color:var(--cyan);
+    font-size:1.8rem;
+    text-shadow: 0 0 18px rgba(0,234,255,.4);
+}
+
+.stat span{ color:var(--muted); font-size:.62rem; font-weight:bold; }
+
+/* SEARCH */
+.search{ position:relative; margin-bottom:18px; }
+.search input{
+    width:100%;
+    padding:15px 18px 15px 48px;
+    border:1px solid rgba(0,234,255,.25);
+    border-radius:12px;
+    outline:none;
+    color:white;
+    background: rgba(5,18,32,.85);
+    font-size:.9rem;
+}
+.search input:focus{
+    border-color:var(--cyan);
+    box-shadow: 0 0 20px rgba(0,234,255,.12);
+}
+.search-icon{ position:absolute; left:17px; top:50%; transform:translateY(-50%); font-size:20px; }
+
+/* FILTER */
+.filters{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:10px;
+    margin-bottom:30px;
+    scrollbar-width:none;
+}
+.filters::-webkit-scrollbar{ display:none; }
+
+.filter{
+    flex:0 0 auto;
+    padding:9px 14px;
+    border:1px solid rgba(0,234,255,.22);
+    border-radius:30px;
+    color:#9fb4c8;
+    background:#061321;
+    font-size:.65rem;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.filter.active{
+    color:#001018;
+    background:var(--cyan);
+    border-color:var(--cyan);
+    box-shadow: 0 0 18px rgba(0,234,255,.3);
+}
+
+/* SECTION */
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin: 25px 0 18px;
+    padding-bottom:11px;
+    color:var(--cyan);
+    font-size:1.35rem;
+    border-bottom: 1px solid rgba(0,234,255,.18);
+}
+
+/* CARDS */
+.cards{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px,1fr));
+    gap:18px;
+}
+
+.card{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:320px;
+    padding:18px;
+    border: 1px solid rgba(0,234,255,.17);
+    border-radius:17px;
+    background: linear-gradient(145deg, rgba(10,29,48,.95), rgba(3,11,22,.97));
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color: rgba(0,234,255,.65);
+    box-shadow: 0 20px 45px rgba(0,0,0,.45), 0 0 25px rgba(0,234,255,.12);
+}
+
+/* VECTOR NEON LOGO BOX */
+.image-box{
+    width:100%;
+    height:110px;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:11px;
+    background: rgba(2, 10, 20, 0.8);
+    border:1px solid rgba(0,234,255,.2);
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Specific Logo Styles */
+.logo-unlocktool {
+    color: #00eaff;
+    text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff;
+    border-color: rgba(0,234,255,0.5);
+}
+.logo-tft {
+    color: #ff315c;
+    text-shadow: 0 0 10px #ff315c, 0 0 20px #ff315c;
+    border-color: rgba(255,49,92,0.5);
+}
+.logo-samfw {
+    color: #00ff9d;
+    text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d;
+    border-color: rgba(0,255,157,0.5);
+}
+.logo-hydra {
+    color: #9b5cff;
+    text-shadow: 0 0 10px #9b5cff, 0 0 20px #9b5cff;
+    border-color: rgba(155,92,255,0.5);
+}
+.logo-mtk {
+    color: #ffc107;
+    text-shadow: 0 0 10px #ffc107, 0 0 20px #ffc107;
+    border-color: rgba(255,193,7,0.5);
+}
+.logo-qualcomm {
+    color: #168cff;
+    text-shadow: 0 0 10px #168cff, 0 0 20px #168cff;
+    border-color: rgba(22,140,255,0.5);
+}
+.logo-spd {
+    color: #ff7b00;
+    text-shadow: 0 0 10px #ff7b00, 0 0 20px #ff7b00;
+    border-color: rgba(255,123,0,0.5);
+}
+
+/* BADGES */
+.badge{
+    display:inline-block;
+    margin-bottom:8px;
+    padding:5px 10px;
+    border-radius:5px;
+    font-size:.6rem;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.tool-badge{ color:#63a9ff; border:1px solid #287cff; background:rgba(40,124,255,.08); }
+.driver-badge{ color:var(--green); border:1px solid var(--green); background:rgba(0,255,157,.06); }
+.pdf-badge{ color:#ff6684; border:1px solid var(--red); background:rgba(255,49,92,.07); }
+
+.card h3{ margin-bottom:8px; font-size:1.1rem; }
+.card p{ margin-bottom:18px; color:var(--muted); font-size:.82rem; line-height:1.7; }
+
+/* BUTTONS */
+.download{
+    display:block;
+    width:100%;
+    padding:12px;
+    text-align:center;
+    text-decoration:none;
+    color:#001018;
+    border-radius:8px;
+    background: linear-gradient(100deg, var(--cyan), var(--blue));
+    font-size:.75rem;
+    font-weight:900;
+}
+
+.download:hover{ box-shadow: 0 0 22px rgba(0,234,255,.4); }
+
+.pdf-button{
+    color:white;
+    background: linear-gradient(100deg, var(--red), var(--purple));
+}
+
+/* NEON FUTURIST CONTACT BOX */
+.neon-contact-box{
+    margin-top:60px;
+    padding:35px 20px;
+    text-align:center;
+    border-radius:20px;
+    background: rgba(5, 18, 32, 0.9);
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 25px rgba(0, 234, 255, 0.25), inset 0 0 25px rgba(0, 234, 255, 0.15);
+    position:relative;
+}
+
+.neon-contact-box h2{
+    font-size:1.6rem;
+    color:var(--white);
+    letter-spacing:2px;
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+.neon-number{
+    display:inline-block;
+    margin:15px 0;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight:900;
+    color:var(--cyan);
+    letter-spacing:4px;
+    text-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan), 0 0 40px var(--blue);
+}
+
+.contact-buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.neon-btn{
+    display:inline-block;
+    padding:12px 25px;
+    font-size:.85rem;
+    font-weight:bold;
+    color:#000;
+    background:var(--green);
+    border-radius:30px;
+    text-decoration:none;
+    box-shadow: 0 0 15px var(--green);
+    transition:.3s;
+}
+
+.neon-btn-wa{
+    background:#25D366;
+    color:#fff;
+    box-shadow: 0 0 15px #25D366;
+}
+
+.neon-btn:hover{
+    transform:scale(1.05);
+}
+
+.no-result{
+    display:none;
+    padding:30px;
+    text-align:center;
+    color:var(--muted);
+    border:1px dashed rgba(0,234,255,.25);
+    border-radius:15px;
+}
+
+footer{
+    padding:35px 20px;
+    text-align:center;
+    background:#01040a;
+    border-top:1px solid rgba(0,234,255,.18);
+}
+footer p{ margin:6px; color:#70849a; font-size:.72rem; }
+footer strong{ color:var(--cyan); }
+
+@media(max-width:700px){
+    .stats, .cards{ grid-template-columns:1fr; }
+    header{ padding-top:35px; }
+    header h1{ font-size:2.2rem; }
+    .madagascar-logo{ width:85px; height:85px; font-size:40px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow glow-one"></div>
+<div class="glow glow-two"></div>
+
+<!-- HEADER -->
+<header id="home">
+    <div class="madagascar-logo">🇲🇬</div>
+    <div class="edition">🇲🇬 MADAGASCAR GSM EDITION</div>
+    <h1>SANDRO GSM<br>TOOLS 205</h1>
+    <p>Ireo fitaovana, drivers, logiciels ary PDF fianarana GSM rehetra amin'ny toerana iray azonao alaina mivantana.</p>
+    <div class="status">
+        <span><i class="online-dot"></i> SYSTEM ONLINE</span>
+        <span>🇲🇬 MADAGASCAR</span>
+        <span>GSM TECHNOLOGY</span>
+    </div>
+</header>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-title">SANDRO GSM</div>
+    <div class="nav-links">
+        <a href="#home">HOME</a>
+        <a href="#tools">TOOLS</a>
+        <a href="#pdf">PDF</a>
+        <a href="#contact">CONTACT</a>
+    </div>
+</nav>
+
+<main>
+
+<!-- STATS -->
+<section class="stats">
+    <div class="stat">
+        <strong id="toolCount">8</strong>
+        <span>GSM TOOLS & LOGICIELS</span>
+    </div>
+    <div class="stat">
+        <strong>3+</strong>
+        <span>PDF COURSES</span>
+    </div>
+    <div class="stat">
+        <strong>205</strong>
+        <span>GSM EDITION</span>
+    </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search">
+    <span class="search-icon">🔎</span>
+    <input id="searchInput" type="search" placeholder="Mitadiava Tool, Software, Driver, PDF...">
+</div>
+
+<!-- FILTER TAB -->
+<div class="filters">
+    <button class="filter active" data-filter="all">ALL</button>
+    <button class="filter" data-filter="logiciels">LOGICIELS</button>
+    <button class="filter" data-filter="mtk">MTK</button>
+    <button class="filter" data-filter="qualcomm">QUALCOMM</button>
+    <button class="filter" data-filter="spd">SPD</button>
+    <button class="filter" data-filter="driver">DRIVERS</button>
+    <button class="filter" data-filter="pdf">PDF</button>
+</div>
+
+<!-- TOOLS & LOGICIELS -->
+<section id="tools">
+<h2 class="section-title">🛠️ GSM Logiciels Tools & Drivers</h2>
+
+<div class="cards">
+
+<!-- UNLOCK TOOL -->
+<article class="card" data-category="logiciels" data-name="UnlockTool GSM Unlocker">
+    <div>
+        <div class="image-box logo-unlocktool">
+            🔓 UNLOCK TOOL
+        </div>
+        <span class="badge tool-badge">LOGICIEL</span>
+        <h3>UnlockTool</h3>
+        <p>Software matanjaka indrindra ho an'ny FRP, Factory Reset, ary Flashing ny marika rehetra.</p>
+    </div>
+    <a href="https://unlocktool.net/download/" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- TFT UNLOCK TOOL -->
+<article class="card" data-category="logiciels" data-name="TFT Unlock Tool Module">
+    <div>
+        <div class="image-box logo-tft">
+            ⚡ TFT UNLOCK
+        </div>
+        <span class="badge tool-badge">LOGICIEL</span>
+        <h3>TFT Unlock Tool</h3>
+        <p>Tool maimaimpoana sy matanjaka amin'ny bypass FRP, flashing ary repair IMEI.</p>
+    </div>
+    <a href="https://www.mediafire.com/file/tft_unlock_tool_latest/file" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- SAMFW TOOL -->
+<article class="card" data-category="logiciels" data-name="SamFW Tool Samsung FRP">
+    <div>
+        <div class="image-box logo-samfw">
+            📲 SAMFW TOOL
+        </div>
+        <span class="badge tool-badge">LOGICIEL</span>
+        <h3>SamFW Tool</h3>
+        <p>Fitaovana manokana ho an'ny Samsung FRP 1-Click bypass, Xiaomi, ary LG.</p>
+    </div>
+    <a href="https://samfw.com/blog/samfw-frp-tool" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- HYDRA TOOL -->
+<article class="card" data-category="logiciels" data-name="Hydra Tool Dongle">
+    <div>
+        <div class="image-box logo-hydra">
+            🐉 HYDRA TOOL
+        </div>
+        <span class="badge tool-badge">LOGICIEL</span>
+        <h3>Hydra Tool</h3>
+        <p>Software matihanina ho an'ny Qualcomm, MTK, Spreadtrum ary Bootloader Unlock.</p>
+    </div>
+    <a href="https://www.hydra-tool.com/download" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- MTK UNIVERSAL TOOL -->
+<article class="card" data-category="mtk" data-name="MTK Universal Tool MediaTek">
+    <div>
+        <div class="image-box logo-mtk">
+            ⚙️ MEDIATEK
+        </div>
+        <span class="badge tool-badge">MTK TOOL</span>
+        <h3>MTK Universal Tool</h3>
+        <p>Tool manokana bypass Auth, Format data ary FRP ho an'ny processeur MediaTek rehetra.</p>
+    </div>
+    <a href="https://www.mediafire.com/file/mtk_client_gui/file" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- QUALCOMM DRIVERS -->
+<article class="card" data-category="qualcomm" data-name="Qualcomm EDL Driver">
+    <div>
+        <div class="image-box logo-qualcomm">
+            💎 QUALCOMM
+        </div>
+        <span class="badge tool-badge">QUALCOMM</span>
+        <h3>Qualcomm USB Drivers</h3>
+        <p>Drivers USB ho an'ny mode 9008 EDL sy diagnostic Qualcomm.</p>
+    </div>
+    <a href="https://www.mediafire.com/file/qualcomm_usb_driver_setup/file" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- SPD DRIVERS -->
+<article class="card" data-category="spd" data-name="SPD Unisoc Spreadtrum Driver">
+    <div>
+        <div class="image-box logo-spd">
+            🚀 UNISOC SPD
+        </div>
+        <span class="badge tool-badge">SPD</span>
+        <h3>SPD / Unisoc Drivers</h3>
+        <p>Pilotes USB ho an'ny fitaovana mandeha amin'ny processeur Unisoc / Spreadtrum.</p>
+    </div>
+    <a href="https://www.mediafire.com/file/spd_driver_autoinstaller/file" target="_blank" class="download">⬇ MEDIAFIRE DOWNLOAD</a>
+</article>
+
+<!-- ADB FASTBOOT -->
+<article class="card" data-category="driver" data-name="ADB Fastboot Android">
+    <div>
+        <div class="image-box logo-unlocktool">
+            🤖 ADB FASTBOOT
+        </div>
+        <span class="badge driver-badge">ADB DRIVER</span>
+        <h3>ADB & Fastboot Tools</h3>
+        <p>Fitaovana komandy ho an'ny Android diagnostic, fastboot flashing sy communication.</p>
+    </div>
+    <a href="https://dl.google.com/android/repository/platform-tools-latest-windows.zip" target="_blank" class="download">⬇ DOWNLOAD DIRECT</a>
+</article>
+
+</div>
+</section>
+
+<!-- PDF SECTION -->
+<section id="pdf">
+<h2 class="section-title">📚 PDF Fianarana GSM</h2>
+
+<div class="cards">
+
+<article class="card" data-category="pdf" data-name="Guide FRP Bypass 2026">
+    <div>
+        <div class="image-box">📖 FRP GUIDE</div>
+        <span class="badge pdf-badge">PDF GUIDE</span>
+        <h3>Guide FRP Bypass 2026</h3>
+        <p>Torolalana amin'ny antsipiriany sy teknika vaovao ho an'ny FRP Bypass amin'ny Android 13/14/15.</p>
+    </div>
+    <a href="https://drive.google.com/search?q=FRP+Bypass+Guide+PDF" target="_blank" class="download pdf-button">📖 HAMAKY PDF</a>
+</article>
+
+<article class="card" data-category="pdf" data-name="Flashing Firmware Course">
+    <div>
+        <div class="image-box">📚 FLASHING</div>
+        <span class="badge pdf-badge">PDF COURSE</span>
+        <h3>Fianarana Flashing & Firmware</h3>
+        <p>Boky fianarana ny fampiasana rom stock, scatter file, unbrick ary flashing.</p>
+    </div>
+    <a href="https://drive.google.com/search?q=Flashing+Firmware+Tutorial+PDF" target="_blank" class="download pdf-button">📖 HAMAKY PDF</a>
+</article>
+
+<article class="card" data-category="pdf" data-name="Micro Soudure Schema">
+    <div>
+        <div class="image-box">🔬 HARDWARE</div>
+        <span class="badge pdf-badge">PDF SCHEMA</span>
+        <h3>Micro-soudure & Schema</h3>
+        <p>Fianarana hamaky schema teknika ny carte mère sy reparation hardware.</p>
+    </div>
+    <a href="https://drive.google.com/search?q=Schematics+Mobile+Repair+PDF" target="_blank" class="download pdf-button">📖 HAMAKY PDF</a>
+</article>
+
+</div>
+</section>
+
+<!-- NEON FUTURISTIC CONTACT SECTION -->
+<section id="contact">
+    <div class="neon-contact-box">
+        <h2>⚡ CONTACT & ASSISTANCE ⚡</h2>
+        <p>Mila fanampiana amin'ny deblocage na fanazavana fanampiny?</p>
+        <div class="neon-number">📲 037 89 513 09</div>
+        
+        <div class="contact-buttons">
+            <a href="tel:0378951309" class="neon-btn">📞 HIANTSO AVY HATRANY</a>
+            <a href="https://wa.me/261378951309" target="_blank" class="neon-btn neon-btn-wa">💬 WHATSAPP DIRECT</a>
+        </div>
+    </div>
+</section>
+
+<div class="no-result" id="noResult">🔎 Tsy nahitana fichier mifanaraka.</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p>🇲🇬 Made for the GSM Community of Madagascar</p>
+    <p>© 2026 <strong>SANDRO GSM Tools</strong></p>
+    <p>FUTURE • TECHNOLOGY • GSM</p>
+</footer>
+
+<script>
+const searchInput = document.getElementById("searchInput");
+const filters = document.querySelectorAll(".filter");
+const cards = document.querySelectorAll(".card");
+const noResult = document.getElementById("noResult");
+const toolCount = document.getElementById("toolCount");
+
+const gsmTools = document.querySelectorAll('#tools .card');
+toolCount.textContent = gsmTools.length;
+
+let currentFilter = "all";
+
+function updateCards(){
+    const search = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+
+    cards.forEach(card => {
+        const category = card.dataset.category.toLowerCase();
+        const name = card.dataset.name.toLowerCase();
+        const text = card.innerText.toLowerCase();
+
+        const filterOK = currentFilter === "all" || category === currentFilter;
+        const searchOK = name.includes(search) || text.includes(search);
+
+        if(filterOK && searchOK){
+            card.style.display = "flex";
+            visible++;
+        }else{
+            card.style.display = "none";
+        }
+    });
+
+    noResult.style.display = visible === 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", updateCards);
+
+filters.forEach(button => {
+    button.addEventListener("click", () => {
+        filters.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentFilter = button.dataset.filter;
+        updateCards();
+    });
+});
+
+updateCards();
+</script>
+
+</body>
+</html>
